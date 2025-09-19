@@ -1,0 +1,87 @@
+{
+  "campaign": {
+    "name": "Springleaf Residence Launch Campaign",
+    "details": {
+      "business_details": {
+        "business_name": "Springleaf Residence",
+        "website": "https://springleafresidence.sg",
+        "mobile": "+65 6123 4567"
+      },
+      "ai_assisted_product_usps": [
+        "Prime location at Upper Thomson with excellent connectivity",
+        "Modern architectural design with sustainable features",
+        "Comprehensive facilities including pool, gym, and landscaped gardens",
+        "Investment opportunity with strong rental yield potential",
+        "Quality finishes and fixtures throughout all units",
+        "24-hour security and concierge services"
+      ],
+      "ad_copies": [
+        {
+          "headline": "Discover Luxury Living at Springleaf Residence",
+          "primary_text": "Experience the perfect blend of modern comfort and natural beauty in Singapore's most desirable location",
+          "description": "Nestled in the heart of Upper Thomson, Springleaf Residence offers an exceptional living experience with premium amenities, quality finishes, and strategic location near top schools, shopping centers, and MRT stations."
+        },
+        {
+          "headline": "Your Dream Home Awaits at Springleaf Residence",
+          "primary_text": "Modern design meets natural tranquility in this exclusive residential development",
+          "description": "Wake up to lush greenery and enjoy resort-style amenities in your own backyard. With excellent connectivity and premium facilities, this is more than just a home - it's a lifestyle."
+        },
+        {
+          "headline": "Invest in Singapore's Premier Residential Development",
+          "primary_text": "Secure your future with Springleaf Residence - where luxury meets opportunity",
+          "description": "Located in a mature estate with strong capital appreciation potential, this development offers both lifestyle benefits and investment returns for discerning buyers."
+        }
+      ],
+      "ad_banners": [
+        {
+          "banner_data": {
+            "creative_title": "Exterior View - Springleaf Residence",
+            "call_out": "Limited Units Available - Register Now!",
+            "call_to_action": "Register Your Interest Today",
+            "creative_image_url": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&h=800&fit=crop&crop=entropy&auto=format"
+          }
+        },
+        {
+          "banner_data": {
+            "creative_title": "Swimming Pool & Facilities",
+            "call_out": "Resort-Style Living",
+            "call_to_action": "Book a Site Visit",
+            "creative_image_url": "https://images.unsplash.com/photo-1544984243-ec57ea16fe25?w=1200&h=800&fit=crop&crop=entropy&auto=format"
+          }
+        },
+        {
+          "banner_data": {
+            "creative_title": "Modern Interior Design",
+            "call_out": "Premium Finishes & Fixtures",
+            "call_to_action": "View Floor Plans",
+            "creative_image_url": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&h=800&fit=crop&crop=entropy&auto=format"
+          }
+        },
+        {
+          "banner_data": {
+            "creative_title": "Landscaped Gardens",
+            "call_out": "Nature at Your Doorstep",
+            "call_to_action": "Explore Amenities",
+            "creative_image_url": "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200&h=800&fit=crop&crop=entropy&auto=format"
+          }
+        },
+        {
+          "banner_data": {
+            "creative_title": "Spacious Living Areas",
+            "call_out": "Thoughtfully Designed Spaces",
+            "call_to_action": "Schedule Viewing",
+            "creative_image_url": "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&h=800&fit=crop&crop=entropy&auto=format"
+          }
+        },
+        {
+          "banner_data": {
+            "creative_title": "Contemporary Kitchen",
+            "call_out": "Modern Living Redefined",
+            "call_to_action": "Learn More",
+            "creative_image_url": "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?w=1200&h=800&fit=crop&crop=entropy&auto=format"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "name": "easy-web-poc",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Campaign to Website Generator - Transform campaign data into complete websites",
+  "keywords": [
+    "nextjs",
+    "typescript",
+    "website-generator",
+    "campaign-data",
+    "property-websites"
+  ],
+  "author": "Yasin Saleem",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "clean": "rm -rf .next out node_modules/.cache",
+    "analyze": "cross-env ANALYZE=true next build",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "dependencies": {
+    "jszip": "^3.10.1",
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.18",
+    "@types/node": "^20.8.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.3.7",
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
+    "autoprefixer": "^10.4.21",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.52.0",
+    "eslint-config-next": "^14.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "postcss": "^8.5.6",
+    "prettier": "^3.0.3",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/easy-web-poc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/easy-web-poc/issues"
+  },
+  "homepage": "https://github.com/your-username/easy-web-poc#readme"
+}

@@ -1,0 +1,42 @@
+# Prettier ignore file
+# Don't format these files and directories
+
+# Dependencies
+node_modules/
+
+# Build outputs
+.next/
+out/
+build/
+dist/
+
+# Generated files
+*.min.js
+*.min.css
+
+# Logs
+*.log
+
+# Database files
+*.db
+*.sqlite
+
+# Cache
+.cache/
+.parcel-cache/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Package lock files (auto-generated)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Generated documentation
+docs/generated/

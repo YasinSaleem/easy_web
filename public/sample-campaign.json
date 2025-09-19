@@ -1,0 +1,84 @@
+{
+  "campaign": {
+    "special_ad_categories": [],
+    "platform": "FACEBOOK",
+    "type": "FACEBOOK_LEAD_ADS",
+    "id": "sample_campaign_12345",
+    "status": "ACTIVE",
+    "name": "Real Estate Campaign - Luxury Apartments",
+    "details": {
+      "business_details": {
+        "business_category": "Real Estate",
+        "product_or_service_description": "Luxury apartment complex featuring modern amenities and prime location",
+        "website": "https://springleaf-residences.com",
+        "mobile": "+65 1234 5678",
+        "business_name": "Springleaf Residences",
+        "business_logo": {
+          "square": {
+            "url": "https://via.placeholder.com/200x200",
+            "width": 200,
+            "height": 200
+          }
+        },
+        "ideal_customers": "Young professionals, families, property investors",
+        "consumer_type": "B2C"
+      },
+      "ai_assisted_product_usps": [
+        "Prime downtown location with easy access to transportation",
+        "State-of-the-art amenities including rooftop pool and fitness center",
+        "Eco-friendly design with solar panels and green building certification",
+        "24/7 concierge service and premium security systems"
+      ],
+      "ad_copies": [
+        {
+          "format_type": "Direct short-form",
+          "primary_text": "Experience luxury living at Springleaf Residences - your dream home awaits in the heart of the city.",
+          "headline": "Your Dream Home Awaits",
+          "description": "Modern luxury meets urban convenience.",
+          "call_to_action_type": "LEARN_MORE"
+        },
+        {
+          "format_type": "Problem-solution format", 
+          "primary_text": "Tired of compromising on location or luxury? Springleaf Residences offers both - premium apartments in the city center.",
+          "headline": "No More Compromises",
+          "description": "Premium location, premium lifestyle.",
+          "call_to_action_type": "SIGN_UP"
+        }
+      ],
+      "ad_banners": [
+        {
+          "image": {
+            "hash": "sample123",
+            "width": 1200,
+            "height": 800,
+            "s3_url": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&h=800&fit=crop"
+          },
+          "banner_data": {
+            "creative_title": "Discover Luxury Living at Springleaf Residences",
+            "call_out": "Experience modern comfort in the heart of the city. Premium amenities, prime location, and unmatched quality await.",
+            "call_to_action": "Schedule a Viewing",
+            "creative_image_url": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&h=800&fit=crop",
+            "size": "landscape",
+            "template_id": "real-estate-1"
+          }
+        },
+        {
+          "image": {
+            "hash": "sample456",
+            "width": 1024,
+            "height": 1024,
+            "s3_url": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1024&h=1024&fit=crop"
+          },
+          "banner_data": {
+            "creative_title": "Modern Amenities Meet Urban Convenience",
+            "call_out": "Rooftop pool, fitness center, and 24/7 concierge service. Experience the lifestyle you deserve.",
+            "call_to_action": "Register Interest",
+            "creative_image_url": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1024&h=1024&fit=crop",
+            "size": "square",
+            "template_id": "real-estate-2"
+          }
+        }
+      ]
+    }
+  }
+}
