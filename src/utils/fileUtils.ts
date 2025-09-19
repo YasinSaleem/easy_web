@@ -23,7 +23,7 @@ export const createAndDownloadZip = async (data: GenerateResponse['data']) => {
     // Try to use JSZip if available
     const JSZip = await import('jszip');
     const zip = new JSZip.default();
-    
+
     // Add all files to ZIP
     Object.entries(data.files).forEach(([filename, content]) => {
       zip.file(filename, content);

@@ -42,7 +42,7 @@ export const useCampaignData = () => {
   return {
     jsonInput,
     setJsonInput,
-    validateAndParseJson
+    validateAndParseJson,
   };
 };
 
@@ -75,7 +75,7 @@ export const useErrorState = () => {
     successMessage,
     setSuccessMessage,
     clearMessages,
-    handleApiError
+    handleApiError,
   };
 };
 
@@ -83,31 +83,31 @@ export const useErrorState = () => {
  * Custom hook for API operations
  */
 export const useApiOperations = () => {
-  const makeApiRequest = useCallback(async <T = any>(
-    endpoint: string,
-    payload: any
-  ): Promise<T> => {
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
+  const makeApiRequest = useCallback(
+    async <T = any>(endpoint: string, payload: any): Promise<T> => {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
 
-    if (!response.ok) {
-      const errorData: ApiError = await response.json();
-      throw { ...errorData, statusCode: response.status };
-    }
+      if (!response.ok) {
+        const errorData: ApiError = await response.json();
+        throw { ...errorData, statusCode: response.status };
+      }
 
-    // Handle both JSON and text responses
-    const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('application/json')) {
-      return await response.json();
-    } else {
-      return await response.text() as any;
-    }
-  }, []);
+      // Handle both JSON and text responses
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        return await response.json();
+      } else {
+        return (await response.text()) as any;
+      }
+    },
+    []
+  );
 
   return { makeApiRequest };
 };

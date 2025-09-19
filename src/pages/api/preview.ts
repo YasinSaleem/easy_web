@@ -13,7 +13,7 @@ export default async function handler(
   if (req.method !== 'POST') {
     return res.status(405).json({
       error: 'Method not allowed',
-      message: 'Only POST requests are supported'
+      message: 'Only POST requests are supported',
     });
   }
 
@@ -24,17 +24,25 @@ export default async function handler(
     if (!campaignData) {
       return res.status(400).json({
         error: 'Missing required fields',
-        message: 'campaignData is required'
+        message: 'campaignData is required',
       });
     }
 
     // Valid routes for our React components
-    const availableRoutes = ['/', '/home', '/location', '/register-interest', '/project-detail', '/gallery', '/floor-plans'];
+    const availableRoutes = [
+      '/',
+      '/home',
+      '/location',
+      '/register-interest',
+      '/project-detail',
+      '/gallery',
+      '/floor-plans',
+    ];
     if (!availableRoutes.includes(route)) {
       return res.status(400).json({
         error: 'Invalid route',
         message: `Route must be one of: ${availableRoutes.join(', ')}`,
-        availableRoutes
+        availableRoutes,
       });
     }
 
@@ -46,19 +54,22 @@ export default async function handler(
       return res.status(400).json({
         error: 'Invalid campaign data',
         message: 'The provided campaign data does not match the required schema',
-        validationErrors: error.issues?.map((err: any) => ({
-          path: err.path?.join('.') || 'unknown',
-          message: err.message || 'Validation error',
-          code: err.code || 'invalid'
-        })) || []
+        validationErrors:
+          error.issues?.map((err: any) => ({
+            path: err.path?.join('.') || 'unknown',
+            message: err.message || 'Validation error',
+            code: err.code || 'invalid',
+          })) || [],
       });
     }
 
-    // Convert campaign data to component props (preview mode - not static generation)
-    const componentData = jsonToProps(validatedCampaign, route, false);
-    
+    // Convert campaign data to component props (preview mode - always render full single-page layout)
+    const componentData = jsonToProps(validatedCampaign, '/');
+
     // Render React component to HTML
-    const componentHTML = renderToStaticMarkup(React.createElement(Template, { data: componentData }));
+    const componentHTML = renderToStaticMarkup(
+      React.createElement(Template, { data: componentData })
+    );
 
     // Create full HTML document
     const fullHTML = `
@@ -68,7 +79,15 @@ export default async function handler(
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="${componentData.projectName} - Modern luxury living">
-  <title>${componentData.projectName}${route !== '/' ? ' - ' + route.replace('/', '').replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()) : ''}</title>
+  <title>${componentData.projectName}${
+    route !== '/'
+      ? ' - ' +
+        route
+          .replace('/', '')
+          .replace('-', ' ')
+          .replace(/\b\w/g, (l) => l.toUpperCase())
+      : ''
+  }</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -128,23 +147,25 @@ export default async function handler(
   <script>
     // Add mobile menu functionality
     document.addEventListener('DOMContentLoaded', function() {
+      // Add smooth scrolling CSS
+      const style = document.createElement('style');
+      style.textContent = 'html { scroll-behavior: smooth; scroll-padding-top: 80px; }';
+      document.head.appendChild(style);
+      
       const menuButton = document.querySelector('[data-mobile-menu-button]');
       const mobileMenu = document.querySelector('[data-mobile-menu]');
       
       if (menuButton && mobileMenu) {
         let isOpen = false;
         
-        // Set initial state - menu should be hidden
-        mobileMenu.classList.add('hidden');
-        mobileMenu.classList.remove('block');
-        
         menuButton.addEventListener('click', function(e) {
           e.preventDefault();
           isOpen = !isOpen;
           
           if (isOpen) {
-            mobileMenu.classList.remove('hidden');
-            mobileMenu.classList.add('block');
+            // Show mobile menu by removing opacity-0 max-h-0 and adding opacity-100 max-h-96
+            mobileMenu.classList.remove('max-h-0', 'opacity-0');
+            mobileMenu.classList.add('max-h-96', 'opacity-100');
             // Update hamburger icon to show X
             const hamburgerIcon = menuButton.querySelector('svg:first-child');
             const closeIcon = menuButton.querySelector('svg:last-child');
@@ -155,8 +176,9 @@ export default async function handler(
               closeIcon.classList.add('block');
             }
           } else {
-            mobileMenu.classList.add('hidden');
-            mobileMenu.classList.remove('block');
+            // Hide mobile menu by removing opacity-100 max-h-96 and adding opacity-0 max-h-0
+            mobileMenu.classList.remove('max-h-96', 'opacity-100');
+            mobileMenu.classList.add('max-h-0', 'opacity-0');
             // Update icon back to hamburger
             const hamburgerIcon = menuButton.querySelector('svg:first-child');
             const closeIcon = menuButton.querySelector('svg:last-child');
@@ -174,8 +196,8 @@ export default async function handler(
         menuLinks.forEach(function(link) {
           link.addEventListener('click', function() {
             isOpen = false;
-            mobileMenu.classList.add('hidden');
-            mobileMenu.classList.remove('block');
+            mobileMenu.classList.remove('max-h-96', 'opacity-100');
+            mobileMenu.classList.add('max-h-0', 'opacity-0');
             // Reset icons
             const hamburgerIcon = menuButton.querySelector('svg:first-child');
             const closeIcon = menuButton.querySelector('svg:last-child');
@@ -189,22 +211,21 @@ export default async function handler(
         });
       }
       
-      // Handle navigation links for preview mode
-      const navLinks = document.querySelectorAll('header a, footer a');
+      // Handle smooth scrolling for anchor links
+      const navLinks = document.querySelectorAll('a[href^="#"]');
       navLinks.forEach(function(link) {
         link.addEventListener('click', function(e) {
-          e.preventDefault();
           const href = link.getAttribute('href');
-          
-          console.log('Navigation clicked:', href);
-          
-          // Send message to parent window to update preview
-          if (window.parent && window.parent !== window) {
-            console.log('Sending message to parent');
-            window.parent.postMessage({
-              type: 'PREVIEW_NAVIGATE',
-              route: href
-            }, '*');
+          if (href && href.startsWith('#')) {
+            const targetId = href.substring(1);
+            const targetElement = document.getElementById(targetId);
+            
+            if (targetElement) {
+              targetElement.scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+              });
+            }
           }
         });
       });
@@ -216,25 +237,24 @@ export default async function handler(
     // Set appropriate headers
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-    
+
     // Return the generated HTML
     return res.status(200).send(fullHTML);
-
   } catch (error) {
     console.error('Preview generation error:', error);
-    
+
     // Handle different types of errors
     if (error instanceof Error) {
       return res.status(500).json({
         error: 'Internal server error',
         message: 'An error occurred while generating the preview',
-        details: error.message
+        details: error.message,
       });
     }
 
     return res.status(500).json({
       error: 'Internal server error',
-      message: 'An unexpected error occurred'
+      message: 'An unexpected error occurred',
     });
   }
 }

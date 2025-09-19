@@ -5,25 +5,22 @@ const nextConfig = {
     // Enable TypeScript plugin
     typedRoutes: false,
   },
-  
+
   // Compiler options
   compiler: {
     // Remove console logs in production
     removeConsole: process.env.NODE_ENV === 'production',
   },
-  
+
   // Performance optimizations
   poweredByHeader: false,
-  
+
   // Image optimization
   images: {
-    domains: [
-      'images.unsplash.com',
-      'unsplash.com',
-    ],
+    domains: ['images.unsplash.com', 'unsplash.com'],
     formats: ['image/webp', 'image/avif'],
   },
-  
+
   // Headers for security
   async headers() {
     return [
@@ -46,7 +43,7 @@ const nextConfig = {
       },
     ];
   },
-  
+
   // API routes configuration
   async rewrites() {
     return [
@@ -56,7 +53,7 @@ const nextConfig = {
       },
     ];
   },
-  
+
   // Webpack configuration
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     // Add support for importing JSON files
@@ -64,7 +61,7 @@ const nextConfig = {
       test: /\.json$/,
       type: 'json',
     });
-    
+
     // Bundle analyzer
     if (process.env.ANALYZE === 'true') {
       const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
@@ -75,19 +72,19 @@ const nextConfig = {
         })
       );
     }
-    
+
     return config;
   },
-  
+
   // Environment variables
   env: {
     CUSTOM_KEY: 'easy-web-poc',
   },
-  
+
   // Output configuration
   output: 'standalone',
   trailingSlash: false,
-  
+
   // Development configuration
   reactStrictMode: true,
   swcMinify: true,

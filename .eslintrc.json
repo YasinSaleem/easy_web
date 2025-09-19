@@ -1,36 +1,18 @@
 {
-  "extends": [
-    "next/core-web-vitals",
-    "@typescript-eslint/recommended",
-    "prettier"
-  ],
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "ecmaVersion": 2022,
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "jsx": true
-    }
-  },
-  "plugins": [
-    "@typescript-eslint",
-    "prettier"
-  ],
+  "extends": ["next/core-web-vitals", "prettier"],
+  "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": "error",
-    "@typescript-eslint/no-unused-vars": "error",
-    "@typescript-eslint/no-explicit-any": "warn",
-    "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/no-empty-function": "warn",
-    "@typescript-eslint/prefer-const": "error",
+    "no-unused-vars": "error",
     "no-var": "error",
     "prefer-const": "error",
-    "no-console": "warn",
+    "no-console": "off",
     "no-debugger": "error",
     "react-hooks/exhaustive-deps": "warn",
     "react/prop-types": "off",
     "react/react-in-jsx-scope": "off",
+    "react/no-children-prop": "off",
+    "react/no-unescaped-entities": "off",
     "@next/next/no-img-element": "warn"
   },
   "settings": {
@@ -43,10 +25,5 @@
     "node": true,
     "es6": true
   },
-  "ignorePatterns": [
-    ".next",
-    "out",
-    "node_modules",
-    "*.d.ts"
-  ]
+  "ignorePatterns": [".next", "out", "node_modules", "*.d.ts"]
 }

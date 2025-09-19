@@ -1,13 +1,14 @@
 # Easy Web POC - Campaign to Website Generator
 
-A Next.js application that transforms campaign data into complete, responsive websites using nature-inspired templates.
+A Next.js application that transforms campaign data into complete, responsive websites using
+nature-inspired templates.
 
 ## 🚀 Features
 
 - **Campaign Data Input**: JSON-based campaign data input with real-time validation
 - **Live Preview**: Instant HTML preview of generated pages
 - **Multi-page Generation**: Generate complete websites with multiple pages
-- **Template System**: Modular template system with reusable components  
+- **Template System**: Modular template system with reusable components
 - **ZIP Download**: Package and download complete websites as ZIP files
 - **Responsive Design**: Mobile-first, nature-inspired design system
 - **TypeScript**: Full type safety throughout the application
@@ -51,28 +52,30 @@ easy_web/
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm 9+
 
 ### Installation
 
 1. **Install dependencies**:
+
    ```bash
    npm install
    ```
 
 2. **Set up environment variables**:
+
    ```bash
    cp .env.example .env.local
    ```
 
 3. **Start development server**:
+
    ```bash
    npm run dev
    ```
 
-4. **Open your browser**:
-   Navigate to [http://localhost:3000](http://localhost:3000)
+4. **Open your browser**: Navigate to [http://localhost:3000](http://localhost:3000)
 
 ### Available Scripts
 
@@ -99,38 +102,51 @@ npm run clean        # Clean build artifacts
 ### API Endpoints
 
 #### POST `/api/preview`
+
 Generate HTML preview for a specific route.
 
 **Request Body**:
+
 ```json
 {
-  "campaignData": { /* Campaign data object */ },
-  "route": "/"  // Optional, defaults to "/"
+  "campaignData": {
+    /* Campaign data object */
+  },
+  "route": "/" // Optional, defaults to "/"
 }
 ```
 
 **Response**: HTML content
 
 #### POST `/api/generate`
+
 Generate complete website bundle.
 
 **Request Body**:
+
 ```json
 {
-  "campaignData": { /* Campaign data object */ },
-  "format": "json"  // Optional
+  "campaignData": {
+    /* Campaign data object */
+  },
+  "format": "json" // Optional
 }
 ```
 
-**Response**: 
+**Response**:
+
 ```json
 {
   "success": true,
   "data": {
     "businessName": "property-name",
     "timestamp": "2025-09-19",
-    "files": { /* All website files */ },
-    "metadata": { /* Generation info */ }
+    "files": {
+      /* All website files */
+    },
+    "metadata": {
+      /* Generation info */
+    }
   }
 }
 ```
@@ -149,14 +165,11 @@ The application expects campaign data in the following format:
         "website": "https://example.com",
         "mobile": "+65 1234 5678"
       },
-      "ai_assisted_product_usps": [
-        "Unique selling point 1",
-        "Unique selling point 2"
-      ],
+      "ai_assisted_product_usps": ["Unique selling point 1", "Unique selling point 2"],
       "ad_copies": [
         {
           "headline": "Main headline",
-          "primary_text": "Primary marketing text", 
+          "primary_text": "Primary marketing text",
           "description": "Detailed description"
         }
       ],
@@ -181,7 +194,7 @@ The Springleaf template includes:
 
 - **Homepage**: Hero section, value proposition, CTA
 - **Location**: Interactive map, nearby amenities
-- **Gallery**: Image grid with lightbox functionality  
+- **Gallery**: Image grid with lightbox functionality
 - **Floor Plans**: Coming soon page with strong CTA
 - **Project Detail**: Features, amenities, investment info
 - **Register Interest**: Contact information and legal disclaimers

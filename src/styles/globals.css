@@ -2,10 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 html {
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
+  scroll-behavior: smooth;
+  scroll-padding-top: 4rem; /* Account for fixed header */
+}
+
+body {
+  @apply antialiased;
 }
 
 .container-wide {
@@ -13,7 +19,7 @@ html {
 }
 
 .section-padding {
-  @apply py-16 sm:py-20 lg:py-24;
+  @apply py-20 sm:py-24 lg:py-28;
 }
 
 .btn-primary {
@@ -21,5 +27,42 @@ html {
 }
 
 .card {
-  @apply bg-white rounded-xl shadow-lg border border-gray-200 p-6;
+  @apply bg-white rounded-xl shadow-lg border border-gray-200 p-6 transition-all duration-300 hover:shadow-xl hover:scale-[1.02];
+}
+
+/* Custom animations */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+/* Smooth transitions for mobile menu */
+.mobile-menu-enter {
+  @apply max-h-0 opacity-0;
+}
+
+.mobile-menu-enter-active {
+  @apply max-h-96 opacity-100;
+  transition:
+    max-height 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
+}
+
+.mobile-menu-exit {
+  @apply max-h-96 opacity-100;
+}
+
+.mobile-menu-exit-active {
+  @apply max-h-0 opacity-0;
+  transition:
+    max-height 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
 }

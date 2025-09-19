@@ -13,7 +13,7 @@ export default async function handler(
   if (req.method !== 'POST') {
     return res.status(405).json({
       error: 'Method not allowed',
-      message: 'Only POST requests are supported'
+      message: 'Only POST requests are supported',
     });
   }
 
@@ -24,7 +24,7 @@ export default async function handler(
     if (!campaignData) {
       return res.status(400).json({
         error: 'Missing required fields',
-        message: 'campaignData is required'
+        message: 'campaignData is required',
       });
     }
 
@@ -36,49 +36,42 @@ export default async function handler(
       return res.status(400).json({
         error: 'Invalid campaign data',
         message: 'The provided campaign data does not match the required schema',
-        validationErrors: error.issues?.map((err: any) => ({
-          path: err.path?.join('.') || 'unknown',
-          message: err.message || 'Validation error',
-          code: err.code || 'invalid'
-        })) || []
+        validationErrors:
+          error.issues?.map((err: any) => ({
+            path: err.path?.join('.') || 'unknown',
+            message: err.message || 'Validation error',
+            code: err.code || 'invalid',
+          })) || [],
       });
     }
 
     // Get business name for naming
-    const businessName = validatedCampaign.campaign?.details?.business_details?.business_name || 'springleaf-residence';
+    const businessName =
+      validatedCampaign.campaign?.details?.business_details?.business_name ||
+      'springleaf-residence';
     const sanitizedBusinessName = businessName.toLowerCase().replace(/[^a-z0-9-]/g, '-');
 
-    // Generate all HTML pages using React components
-    const routes = ['/', '/location', '/register-interest', '/project-detail', '/gallery', '/floor-plans'];
-    const routeFileMap: { [key: string]: string } = {
-      '/': 'index.html',
-      '/location': 'location.html',
-      '/register-interest': 'register-interest.html',
-      '/project-detail': 'project-detail.html',
-      '/gallery': 'gallery.html',
-      '/floor-plans': 'floor-plans.html'
-    };
-
+    // Generate single-page HTML application
     const generatedFiles: { [filename: string]: string } = {};
 
-    // Generate HTML files for each route
-    for (const route of routes) {
-      try {
-        // Convert campaign data to component props (with static generation mode enabled)
-        const componentData = jsonToProps(validatedCampaign, route, true);
-        
-        // Render React component to HTML
-        const componentHTML = renderToStaticMarkup(React.createElement(Template, { data: componentData }));
+    try {
+      // Convert campaign data to component props (with static generation mode enabled for file paths)
+      const componentData = jsonToProps(validatedCampaign, '/');
 
-        // Create full HTML document
-        const fullHTML = `
+      // Render React component to HTML
+      const componentHTML = renderToStaticMarkup(
+        React.createElement(Template, { data: componentData })
+      );
+
+      // Create full HTML document with proper anchor navigation and hamburger menu
+      const fullHTML = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="${componentData.projectName} - Modern luxury living">
-  <title>${componentData.projectName}${route !== '/' ? ' - ' + route.replace('/', '').replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()) : ''}</title>
+  <title>${componentData.projectName}</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -132,29 +125,33 @@ export default async function handler(
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 80px;
+    }
+  </style>
 </head>
 <body>
   ${componentHTML}
   <script>
-    // Add mobile menu functionality
+    // Add mobile menu functionality and anchor navigation
     document.addEventListener('DOMContentLoaded', function() {
+      // Mobile menu functionality
       const menuButton = document.querySelector('[data-mobile-menu-button]');
       const mobileMenu = document.querySelector('[data-mobile-menu]');
       
       if (menuButton && mobileMenu) {
         let isOpen = false;
         
-        // Set initial state - menu should be hidden
-        mobileMenu.classList.add('hidden');
-        mobileMenu.classList.remove('block');
-        
         menuButton.addEventListener('click', function(e) {
           e.preventDefault();
           isOpen = !isOpen;
           
           if (isOpen) {
-            mobileMenu.classList.remove('hidden');
-            mobileMenu.classList.add('block');
+            // Show mobile menu
+            mobileMenu.classList.remove('max-h-0', 'opacity-0');
+            mobileMenu.classList.add('max-h-96', 'opacity-100');
             // Update hamburger icon to show X
             const hamburgerIcon = menuButton.querySelector('svg:first-child');
             const closeIcon = menuButton.querySelector('svg:last-child');
@@ -165,8 +162,9 @@ export default async function handler(
               closeIcon.classList.add('block');
             }
           } else {
-            mobileMenu.classList.add('hidden');
-            mobileMenu.classList.remove('block');
+            // Hide mobile menu
+            mobileMenu.classList.remove('max-h-96', 'opacity-100');
+            mobileMenu.classList.add('max-h-0', 'opacity-0');
             // Update icon back to hamburger
             const hamburgerIcon = menuButton.querySelector('svg:first-child');
             const closeIcon = menuButton.querySelector('svg:last-child');
@@ -184,8 +182,8 @@ export default async function handler(
         menuLinks.forEach(function(link) {
           link.addEventListener('click', function() {
             isOpen = false;
-            mobileMenu.classList.add('hidden');
-            mobileMenu.classList.remove('block');
+            mobileMenu.classList.remove('max-h-96', 'opacity-100');
+            mobileMenu.classList.add('max-h-0', 'opacity-0');
             // Reset icons
             const hamburgerIcon = menuButton.querySelector('svg:first-child');
             const closeIcon = menuButton.querySelector('svg:last-child');
@@ -198,17 +196,36 @@ export default async function handler(
           });
         });
       }
+      
+      // Smooth scrolling for anchor links
+      const anchorLinks = document.querySelectorAll('a[href^="#"]');
+      anchorLinks.forEach(function(link) {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const href = link.getAttribute('href');
+          if (href && href.startsWith('#')) {
+            const targetId = href.substring(1);
+            const targetElement = document.getElementById(targetId);
+            
+            if (targetElement) {
+              targetElement.scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+              });
+            }
+          }
+        });
+      });
     });
   </script>
 </body>
 </html>`.trim();
 
-        const fileName = routeFileMap[route] || `${route.slice(1)}.html`;
-        generatedFiles[fileName] = fullHTML;
-      } catch (error) {
-        console.error(`Error generating page for route ${route}:`, error);
-        // Add error page instead
-        generatedFiles[routeFileMap[route] || `${route.slice(1)}.html`] = `
+      generatedFiles['index.html'] = fullHTML;
+    } catch (error) {
+      console.error('Error generating single-page HTML:', error);
+      // Add error page instead
+      generatedFiles['index.html'] = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -218,7 +235,7 @@ export default async function handler(
 </head>
 <body style="font-family: Arial, sans-serif; margin: 2rem; color: #333;">
     <h1 style="color: #dc2626;">Error</h1>
-    <p>There was an error generating this page for route: <strong>${route}</strong></p>
+    <p>There was an error generating the single-page website.</p>
     <p>Please check your campaign data and try again.</p>
     <details style="margin-top: 1rem;">
       <summary style="cursor: pointer; font-weight: bold;">Error Details</summary>
@@ -226,84 +243,93 @@ export default async function handler(
     </details>
 </body>
 </html>`;
-      }
     }
 
     // Add README file
     const readmeContent = `# ${businessName}
 
-This modern responsive website was generated automatically from campaign data using React + Tailwind CSS.
+This modern single-page responsive website was generated automatically from campaign data using React + Tailwind CSS.
 
 ## Files Included:
-- index.html - Homepage with hero, value proposition, and CTA
-- location.html - Location details with amenities and transport
-- register-interest.html - Property registration form and contact information
-- project-detail.html - Project specifications and amenities
-- gallery.html - Interactive photo gallery with lightbox
-- floor-plans.html - Floor plan layouts with interactive selection
+- index.html - Complete single-page website with all sections
 
 ## Features:
+- ✅ Single-page application with smooth anchor navigation
 - ✅ Modern responsive design with Tailwind CSS
-- ✅ Mobile-first approach with hamburger menu
+- ✅ Mobile-first approach with functional hamburger menu
+- ✅ Smooth scrolling between sections
 - ✅ Premium real estate styling
 - ✅ Interactive components (gallery, floor plans)
 - ✅ SEO-friendly structure
 - ✅ Cross-browser compatibility
+- ✅ Works offline - all dependencies included via CDN
+
+## Navigation:
+All sections are accessible through the navigation menu:
+- Home - Hero section with main call-to-action
+- About - Value proposition and key features
+- Project Details - Specifications and amenities
+- Gallery - Interactive photo gallery
+- Floor Plans - Apartment layouts
+- Location - Address and nearby amenities
+- Register Interest - Contact form
 
 ## Setup:
-1. Extract all files to a web server directory
+1. Extract files to any web server directory
 2. Open index.html in a web browser
-3. All pages are linked and ready to use
-4. Works offline - all dependencies included via CDN
+3. All navigation works via smooth scrolling anchors
+4. Fully functional single-page application
 
 ## Technology Stack:
 - React components rendered to static HTML
 - Tailwind CSS for styling
-- Vanilla JavaScript for interactions
-- Responsive grid layouts
-- Modern typography with Inter font
+- Vanilla JavaScript for navigation and mobile menu
+- HTML5 semantic structure with anchor navigation
 
-Generated on: ${new Date().toISOString()}
+Generated on: ${new Date().toLocaleDateString()}
 Campaign: ${validatedCampaign.campaign?.name || 'Real Estate Campaign'}
 Business: ${businessName}
 `;
 
     generatedFiles['README.md'] = readmeContent;
 
-    // Return JSON bundle that frontend can process
-    const timestamp = new Date().toISOString().slice(0, 10);
-    
-    return res.status(200).json({
-      success: true,
-      data: {
-        businessName: sanitizedBusinessName,
-        timestamp,
-        files: generatedFiles,
-        metadata: {
-          campaignName: validatedCampaign.campaign?.name || 'Real Estate Campaign',
-          pagesGenerated: Object.keys(generatedFiles).filter(f => f.endsWith('.html')).length,
-          totalFiles: Object.keys(generatedFiles).length,
-          technology: 'React + Tailwind CSS',
-          responsive: true,
-          mobileOptimized: true
-        }
-      }
-    });
+    // Return response based on format
+    if (format === 'json') {
+      return res.status(200).json({
+        success: true,
+        message: 'Single-page website generated successfully',
+        data: {
+          businessName: sanitizedBusinessName,
+          timestamp: new Date().toISOString(),
+          files: generatedFiles,
+          metadata: {
+            campaignName: validatedCampaign.campaign?.name || 'Real Estate Campaign',
+            pagesGenerated: 1, // Single page now
+            businessName,
+          },
+        },
+      });
+    }
 
+    return res.status(400).json({
+      error: 'Unsupported format',
+      message: 'Only JSON format is currently supported',
+    });
   } catch (error) {
     console.error('Generation error:', error);
-    
+
+    // Handle different types of errors
     if (error instanceof Error) {
       return res.status(500).json({
         error: 'Internal server error',
-        message: 'An error occurred while generating the website files',
-        details: error.message
+        message: 'An error occurred while generating the website',
+        details: error.message,
       });
     }
 
     return res.status(500).json({
       error: 'Internal server error',
-      message: 'An unexpected error occurred'
+      message: 'An unexpected error occurred',
     });
   }
 }
@@ -312,7 +338,7 @@ Business: ${businessName}
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '10mb',
+      sizeLimit: '10mb', // Allow larger JSON payloads for campaign data with images
     },
   },
 };
