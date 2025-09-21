@@ -166,7 +166,7 @@ export const campaignSchema = z.object({
       ad_videos: z
         .array(
           z.object({
-            video_url: z.string().url().optional(),
+            video_url: z.string().url().or(z.literal('')).optional(),
             tiktok: z
               .object({
                 video_id: z.string().optional(),
@@ -175,7 +175,7 @@ export const campaignSchema = z.object({
                     image_id: z.string().optional(),
                     width: z.number().optional(),
                     height: z.number().optional(),
-                    image_url: z.string().url().optional(),
+                    image_url: z.string().url().or(z.literal('')).optional(),
                   })
                   .optional(),
               })
