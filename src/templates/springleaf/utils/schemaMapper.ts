@@ -68,9 +68,14 @@ export function mapInternalSchemaToTemplate(schema: InternalSchemaType): Templat
             variant: btn.variant,
           })) || [
             {
-              text: 'Learn More',
-              href: '#about',
+              text: 'Register Interest',
+              href: '#register-interest',
               variant: 'primary' as const,
+            },
+            {
+              text: 'View Gallery',
+              href: '#gallery',
+              variant: 'secondary' as const,
             },
           ],
           trustIndicators: schema.hero.trustIndicators,
