@@ -583,3 +583,227 @@
     border-color: #374151;
   }
 }
+
+/* ============================================ */
+/* Tab Interface */
+/* ============================================ */
+
+.poc-tab-header {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 1rem;
+  gap: 1px;
+}
+
+.poc-tab {
+  background: #f9fafb;
+  border: none;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  border-radius: 0.5rem 0.5rem 0 0;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.poc-tab:hover:not(.poc-tab-active) {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.poc-tab-active {
+  background: white;
+  color: #047857;
+  border-bottom-color: #047857;
+  box-shadow: 0 -2px 4px -1px rgb(0 0 0 / 0.1);
+}
+
+.poc-indicator {
+  color: #10b981;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.poc-tab-content {
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.poc-schema-textarea {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.poc-transforming {
+  color: #3b82f6;
+  font-size: 0.875rem;
+  font-weight: 400;
+  margin-left: 0.5rem;
+}
+
+.poc-helper-text {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+/* Dark mode tab styles */
+@media (prefers-color-scheme: dark) {
+  .poc-tab {
+    background: #374151;
+    color: #d1d5db;
+  }
+
+  .poc-tab:hover:not(.poc-tab-active) {
+    background: #4b5563;
+    color: #f3f4f6;
+  }
+
+  .poc-tab-active {
+    background: #1f2937;
+    color: #10b981;
+  }
+
+  .poc-tab-header {
+    border-bottom-color: #4b5563;
+  }
+
+  .poc-helper-text {
+    color: #9ca3af;
+  }
+
+  .poc-transforming {
+    color: #60a5fa;
+  }
+}
+
+/* ============================================ */
+/* Missing Fields Notification */
+/* ============================================ */
+
+.poc-missing-fields {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 2px solid #f59e0b;
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+
+.poc-missing-fields-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.poc-missing-fields-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.poc-missing-fields-title {
+  color: #92400e;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+.poc-missing-fields-subtitle {
+  color: #a16207;
+  font-size: 0.875rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.poc-missing-fields-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.poc-missing-field-item {
+  background: rgba(255, 255, 255, 0.6);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #f59e0b;
+}
+
+.poc-inconsistent-field {
+  background: rgba(254, 202, 202, 0.6);
+  border: 1px solid #ef4444;
+}
+
+.poc-missing-field-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.poc-missing-field-label {
+  font-weight: 600;
+  color: #92400e;
+  font-size: 0.875rem;
+}
+
+.poc-missing-field-path {
+  background: rgba(146, 64, 14, 0.1);
+  color: #92400e;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.poc-missing-field-description {
+  color: #a16207;
+  font-size: 0.875rem;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.poc-missing-fields-footer {
+  background: rgba(255, 255, 255, 0.8);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #fbbf24;
+}
+
+.poc-missing-fields-tip {
+  color: #92400e;
+  font-size: 0.875rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Responsive adjustments for missing fields */
+@media (max-width: 768px) {
+  .poc-missing-field-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .poc-missing-field-path {
+    align-self: flex-start;
+  }
+}

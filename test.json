@@ -1,0 +1,190 @@
+{
+  "campaign": {
+    "special_ad_categories": [],
+    "platform": "TIKTOK",
+    "type": "TIKTOK_WHATSAPP",
+    "id": "luxuryApt_123456789",
+    "status": "DRAFT",
+    "created_at": {
+      "_seconds": 1756212179,
+      "_nanoseconds": 129000000
+    },
+    "uid": "luxuryAptUID_987654321",
+    "updated_at": {
+      "_seconds": 1756212491,
+      "_nanoseconds": 510000000
+    },
+    "name": "springleaf@gmail.com_Real Estate Campaign - Luxury Apartments_1756212491510",
+    "details": {
+      "config": {
+        "ad_account_id": "998877665544",
+        "fb_page_id": "445566778899",
+        "google_ad_account_id": "1122334455",
+        "advantage_campaign_budget": true,
+        "google_custom_conversion_action_doc_id": "_lead",
+        "meta_sales_purchase_event_name": "_purchase",
+        "partner": null
+      },
+      "business_details": {
+        "business_category": "Real Estate",
+        "product_or_service_description": "Luxury apartment complex featuring modern amenities and prime location",
+        "product_or_service_offers_or_usp": "Prime downtown location, eco-friendly design, premium amenities",
+        "website": "https://springleaf-residences.com",
+        "mobile": "+6512345678",
+        "mobile_without_country_code": "12345678",
+        "country_code": "+65",
+        "business_name": "Springleaf Residences",
+        "business_logo": {
+          "square": {
+            "url": "https://via.placeholder.com/200x200",
+            "width": 200,
+            "height": 200
+          }
+        },
+        "ideal_customers": "Young professionals, families, property investors",
+        "consumer_type": "B2C"
+      },
+      "targeting": {
+        "age_min": 28,
+        "genders": [1, 2],
+        "geo_locations": {
+          "location_types": ["recent", "home"]
+        },
+        "age_max": 55
+      },
+      "ai_assisted_product_usps": [
+        "Prime downtown location with easy access to transportation",
+        "State-of-the-art amenities including rooftop pool and fitness center",
+        "Eco-friendly design with solar panels and green building certification",
+        "24/7 concierge service and premium security systems"
+      ],
+      "leadgen_form": {
+        "is_optimized_for_quality": true,
+        "question_page_custom_headline": "We will use these details to reach out with more information.",
+        "follow_up_action_url": "https://springleaf-residences.com/contact",
+        "privacy_policy": {
+          "link_text": "Privacy Policy",
+          "url": "https://springleaf-residences.com/privacy"
+        },
+        "name": "Springleaf Residences Lead Form",
+        "questions": [
+          {
+            "type": "FULL_NAME",
+            "key": "question1"
+          },
+          {
+            "type": "EMAIL",
+            "key": "question2"
+          },
+          {
+            "type": "PHONE",
+            "key": "question3"
+          },
+          {
+            "type": "CUSTOM",
+            "key": "question4",
+            "label": "What type of property are you most interested in?"
+          }
+        ],
+        "block_display_for_non_targeted_viewer": false,
+        "context_card": {
+          "style": "PARAGRAPH_STYLE",
+          "title": "Register Your Interest",
+          "content": [
+            "Please provide your details below to schedule a private viewing of Springleaf Residences."
+          ]
+        },
+        "follow_up_action_text": "Visit Our Website"
+      },
+      "ad_copies": [
+        {
+          "format_type": "Direct short-form",
+          "primary_text": "Experience luxury living at Springleaf Residences - your dream home awaits in the heart of the city.",
+          "headline": "Your Dream Home Awaits",
+          "description": "Modern luxury meets urban convenience.",
+          "call_to_action_type": "LEARN_MORE"
+        },
+        {
+          "format_type": "Problem-solution format",
+          "primary_text": "Tired of compromising on location or luxury? Springleaf Residences offers both - premium apartments in the city center.",
+          "headline": "No More Compromises",
+          "description": "Premium location, premium lifestyle.",
+          "call_to_action_type": "SIGN_UP"
+        },
+        {
+          "format_type": "Listicle format",
+          "primary_text": "Why choose Springleaf Residences? 1. Prime location 2. Rooftop pool & gym 3. Eco-friendly design 4. 24/7 concierge.",
+          "headline": "Top Reasons to Choose Springleaf",
+          "description": "Elevate your lifestyle today.",
+          "call_to_action_type": "GET_QUOTE"
+        }
+      ],
+      "ad_banners": [
+        {
+          "image": {
+            "hash": "sample123",
+            "width": 1200,
+            "height": 800,
+            "s3_url": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&h=800&fit=crop"
+          },
+          "banner_data": {
+            "creative_title": "Discover Luxury Living at Springleaf Residences",
+            "call_out": "Experience modern comfort in the heart of the city. Premium amenities, prime location, and unmatched quality await.",
+            "call_to_action": "Schedule a Viewing",
+            "creative_image_url": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&h=800&fit=crop",
+            "size": "landscape",
+            "template_id": "real-estate-1"
+          }
+        },
+        {
+          "image": {
+            "hash": "sample456",
+            "width": 1024,
+            "height": 1024,
+            "s3_url": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1024&h=1024&fit=crop"
+          },
+          "banner_data": {
+            "creative_title": "Modern Amenities Meet Urban Convenience",
+            "call_out": "Rooftop pool, fitness center, and 24/7 concierge service. Experience the lifestyle you deserve.",
+            "call_to_action": "Register Interest",
+            "creative_image_url": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1024&h=1024&fit=crop",
+            "size": "square",
+            "template_id": "real-estate-2"
+          }
+        }
+      ],
+      "budget_and_scheduling": {
+        "start_time": "2025-11-26T12:48:04.171Z",
+        "idr": {
+          "lifetime_budget": 200000000,
+          "daily_budget": 5000000
+        },
+        "end_time": "2025-12-29T12:48:04.171Z",
+        "currency": "IDR",
+        "custom_params": {
+          "idr_to_usd_exchange_rate": 0.000064
+        }
+      }
+    },
+    "tiktok_ads_data": {
+      "geo_locations": [
+        {
+          "geo": {
+            "description": "Province",
+            "geo_id": "1626220",
+            "geo_type": "PROVINCE",
+            "parent_id": "1643084",
+            "region_code": "SG"
+          },
+          "isp": null,
+          "name": "Singapore",
+          "status_info": {
+            "reason": null,
+            "status": "ENABLED"
+          },
+          "targeting_type": "GEO"
+        }
+      ]
+    }
+  }
+}

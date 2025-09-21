@@ -7,6 +7,8 @@ import { API_ENDPOINTS, ERROR_MESSAGES } from '../constants';
 import { GenerateResponse } from '../types';
 import { useCampaignData, useErrorState, useApiOperations } from '../hooks';
 import { createAndDownloadZip } from '../utils/fileUtils';
+import MissingFieldsNotification from '../components/MissingFieldsNotification';
+import { InternalSchemaType } from '../schema/internalSchema';
 
 const POCPage: NextPage = () => {
   // Use custom hooks for better organization
@@ -20,6 +22,12 @@ const POCPage: NextPage = () => {
     handleApiError,
   } = useErrorState();
   const { makeApiRequest } = useApiOperations();
+
+  // State for new workflow
+  const [transformedSchema, setTransformedSchema] = useState<InternalSchemaType | null>(null);
+  const [editableSchemaText, setEditableSchemaText] = useState<string>('');
+  const [isTransforming, setIsTransforming] = useState(false);
+  const [showRawJson, setShowRawJson] = useState(true);
 
   // Local state
   const [previewHtml, setPreviewHtml] = useState<string>('');
@@ -165,16 +173,48 @@ const POCPage: NextPage = () => {
     clearMessages();
 
     try {
-      const campaignData = validateAndParseJson(jsonInput);
       setIsPreviewLoading(true);
 
+      // Use edited schema if available, otherwise transform from raw JSON
+      let schemaData = null;
+
+      if (!showRawJson && editableSchemaText.trim()) {
+        // User has edited the schema, try to parse and use it
+        try {
+          schemaData = JSON.parse(editableSchemaText);
+          setTransformedSchema(schemaData as InternalSchemaType);
+        } catch (parseError) {
+          throw new Error('Invalid JSON in schema editor. Please check the syntax.');
+        }
+      } else if (transformedSchema) {
+        // Use existing transformed schema
+        schemaData = transformedSchema;
+      } else {
+        // Transform from raw JSON
+        const campaignData = validateAndParseJson(jsonInput);
+        setIsTransforming(true);
+        setShowRawJson(false); // Switch to schema tab when transforming
+
+        const transformResponse = await makeApiRequest<any>('/api/transform', {
+          campaignData,
+        });
+
+        schemaData = transformResponse.data;
+        setTransformedSchema(schemaData as InternalSchemaType);
+        setEditableSchemaText(JSON.stringify(schemaData, null, 2));
+        setIsTransforming(false);
+        setSuccessMessage('Campaign data transformed successfully!');
+      }
+
+      // Generate preview using the schema
       const html = await makeApiRequest<string>(API_ENDPOINTS.PREVIEW, {
-        campaignData,
+        internalSchemaData: schemaData,
         route: '/',
       });
 
       setPreviewHtml(html);
     } catch (err: any) {
+      setIsTransforming(false);
       if (err.statusCode) {
         handleApiError(err, ERROR_MESSAGES.PREVIEW_FAILED);
       } else {
@@ -186,17 +226,57 @@ const POCPage: NextPage = () => {
     } finally {
       setIsPreviewLoading(false);
     }
-  }, [jsonInput, validateAndParseJson, makeApiRequest, clearMessages, handleApiError]);
+  }, [
+    jsonInput,
+    transformedSchema,
+    editableSchemaText,
+    showRawJson,
+    validateAndParseJson,
+    makeApiRequest,
+    clearMessages,
+    handleApiError,
+    setSuccessMessage,
+  ]);
 
   const handleGenerate = useCallback(async () => {
     clearMessages();
 
     try {
-      const campaignData = validateAndParseJson(jsonInput);
       setIsGenerating(true);
 
+      // Use edited schema if available, otherwise transform from raw JSON
+      let schemaData = null;
+
+      if (!showRawJson && editableSchemaText.trim()) {
+        // User has edited the schema, try to parse and use it
+        try {
+          schemaData = JSON.parse(editableSchemaText);
+          setTransformedSchema(schemaData as InternalSchemaType);
+        } catch (parseError) {
+          throw new Error('Invalid JSON in schema editor. Please check the syntax.');
+        }
+      } else if (transformedSchema) {
+        // Use existing transformed schema
+        schemaData = transformedSchema;
+      } else {
+        // Transform from raw JSON
+        const campaignData = validateAndParseJson(jsonInput);
+        setIsTransforming(true);
+        setShowRawJson(false); // Switch to schema tab when transforming
+
+        const transformResponse = await makeApiRequest<any>('/api/transform', {
+          campaignData,
+        });
+
+        schemaData = transformResponse.data;
+        setTransformedSchema(schemaData as InternalSchemaType);
+        setEditableSchemaText(JSON.stringify(schemaData, null, 2));
+        setIsTransforming(false);
+      }
+
+      // Generate website using the schema
       const result = await makeApiRequest<GenerateResponse>(API_ENDPOINTS.GENERATE, {
-        campaignData,
+        internalSchemaData: schemaData,
         format: 'json',
       });
 
@@ -204,9 +284,10 @@ const POCPage: NextPage = () => {
       await createAndDownloadZip(result.data);
 
       setSuccessMessage(
-        `Successfully generated ${result.data.metadata.pagesGenerated} pages for "${result.data.metadata.campaignName}"`
+        `Successfully generated website for "${result.data.metadata.campaignName}"`
       );
     } catch (err: any) {
+      setIsTransforming(false);
       if (err.statusCode) {
         handleApiError(err, ERROR_MESSAGES.GENERATION_FAILED);
       } else {
@@ -220,6 +301,9 @@ const POCPage: NextPage = () => {
     }
   }, [
     jsonInput,
+    transformedSchema,
+    editableSchemaText,
+    showRawJson,
     validateAndParseJson,
     makeApiRequest,
     clearMessages,
@@ -257,38 +341,104 @@ const POCPage: NextPage = () => {
             {/* Left Column - Input */}
             <div className='poc-column'>
               <div className='poc-card'>
-                <h2 className='poc-card-title'>Campaign Data (JSON)</h2>
+                {/* Tab Headers */}
+                <div className='poc-tab-header'>
+                  <button
+                    onClick={() => setShowRawJson(true)}
+                    className={`poc-tab ${showRawJson ? 'poc-tab-active' : ''}`}
+                  >
+                    Raw JSON
+                  </button>
+                  <button
+                    onClick={() => setShowRawJson(false)}
+                    className={`poc-tab ${!showRawJson ? 'poc-tab-active' : ''}`}
+                  >
+                    Internal Schema
+                    {transformedSchema && <span className='poc-indicator'>•</span>}
+                  </button>
+                </div>
 
-                <textarea
-                  className='poc-textarea'
-                  placeholder='Paste your campaign JSON data here...'
-                  value={jsonInput}
-                  onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setJsonInput(e.target.value)}
-                  aria-label='Campaign JSON data input'
-                />
+                {/* Tab Content */}
+                {showRawJson ? (
+                  <div className='poc-tab-content'>
+                    <h2 className='poc-card-title'>Campaign Data (JSON)</h2>
+                    <textarea
+                      className='poc-textarea'
+                      placeholder='Paste your campaign JSON data here...'
+                      value={jsonInput}
+                      onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                        setJsonInput(e.target.value)
+                      }
+                      aria-label='Campaign JSON data input'
+                    />
+                  </div>
+                ) : (
+                  <div className='poc-tab-content'>
+                    <h2 className='poc-card-title'>
+                      Internal Schema (Editable)
+                      {isTransforming && <span className='poc-transforming'>Transforming...</span>}
+                    </h2>
+                    <textarea
+                      className='poc-textarea poc-schema-textarea'
+                      placeholder={
+                        transformedSchema
+                          ? 'Edit the internal schema...'
+                          : 'Internal schema will appear here after transformation'
+                      }
+                      value={editableSchemaText}
+                      onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                        setEditableSchemaText(e.target.value)
+                      }
+                      aria-label='Internal schema editor'
+                      disabled={!transformedSchema}
+                    />
+                    {!transformedSchema && (
+                      <p className='poc-helper-text'>
+                        Click "Preview" to automatically transform your raw JSON into an editable
+                        internal schema.
+                      </p>
+                    )}
+                  </div>
+                )}
 
                 {/* Action Buttons */}
                 <div className='poc-button-group'>
                   <button
                     onClick={handlePreview}
-                    disabled={isPreviewLoading}
-                    className={`poc-btn poc-btn-primary ${isPreviewLoading ? 'poc-btn-loading' : ''}`}
+                    disabled={isPreviewLoading || isTransforming}
+                    className={`poc-btn poc-btn-primary ${isPreviewLoading || isTransforming ? 'poc-btn-loading' : ''}`}
                     aria-label={
-                      isPreviewLoading ? 'Generating preview...' : 'Generate page preview'
+                      isTransforming
+                        ? 'Transforming schema...'
+                        : isPreviewLoading
+                          ? 'Generating preview...'
+                          : 'Generate page preview'
                     }
                   >
-                    {isPreviewLoading ? 'Generating...' : 'Preview Page'}
+                    {isTransforming
+                      ? 'Transforming...'
+                      : isPreviewLoading
+                        ? 'Generating...'
+                        : 'Preview Page'}
                   </button>
 
                   <button
                     onClick={handleGenerate}
-                    disabled={isGenerating}
-                    className={`poc-btn poc-btn-success ${isGenerating ? 'poc-btn-loading' : ''}`}
+                    disabled={isGenerating || isTransforming}
+                    className={`poc-btn poc-btn-success ${isGenerating || isTransforming ? 'poc-btn-loading' : ''}`}
                     aria-label={
-                      isGenerating ? 'Generating website...' : 'Generate complete website'
+                      isTransforming
+                        ? 'Transforming schema...'
+                        : isGenerating
+                          ? 'Generating website...'
+                          : 'Generate complete website'
                     }
                   >
-                    {isGenerating ? 'Generating...' : 'Generate Website'}
+                    {isTransforming
+                      ? 'Transforming...'
+                      : isGenerating
+                        ? 'Generating...'
+                        : 'Generate Website'}
                   </button>
                 </div>
 
@@ -321,6 +471,9 @@ const POCPage: NextPage = () => {
                   </div>
                 )}
               </div>
+
+              {/* Missing Fields Notification */}
+              <MissingFieldsNotification schema={transformedSchema} />
 
               {/* Instructions */}
               <div className='poc-info-card poc-instructions'>

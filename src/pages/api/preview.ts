@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { campaignSchema, type Campaign } from '../../schema/campaignSchema';
-import { jsonToProps } from '../../utils/jsonToProps';
+import { InternalSchema, InternalSchemaType } from '../../schema/internalSchema';
+import { mapInternalSchemaToTemplate } from '../../templates/springleaf/utils/schemaMapper';
 import Template from '../../templates/springleaf/Template';
 import React from 'react';
 
@@ -18,13 +18,14 @@ export default async function handler(
   }
 
   try {
-    const { campaignData, route = '/' } = req.body;
+    const { internalSchemaData, route = '/' } = req.body;
 
     // Validate required fields
-    if (!campaignData) {
+    if (!internalSchemaData) {
       return res.status(400).json({
         error: 'Missing required fields',
-        message: 'campaignData is required',
+        message:
+          'internalSchemaData is required. Use /api/transform to convert campaign data first.',
       });
     }
 
@@ -46,14 +47,14 @@ export default async function handler(
       });
     }
 
-    // Parse and validate campaign data using Zod schema
-    let validatedCampaign: Campaign;
+    // Parse and validate internal schema data using Zod
+    let validatedSchema: InternalSchemaType;
     try {
-      validatedCampaign = campaignSchema.parse(campaignData);
+      validatedSchema = InternalSchema.parse(internalSchemaData);
     } catch (error: any) {
       return res.status(400).json({
-        error: 'Invalid campaign data',
-        message: 'The provided campaign data does not match the required schema',
+        error: 'Invalid internal schema data',
+        message: 'The provided internal schema data does not match the required format',
         validationErrors:
           error.issues?.map((err: any) => ({
             path: err.path?.join('.') || 'unknown',
@@ -63,12 +64,12 @@ export default async function handler(
       });
     }
 
-    // Convert campaign data to component props (preview mode - always render full single-page layout)
-    const componentData = jsonToProps(validatedCampaign, '/');
+    // Convert internal schema to template props
+    const templateData = mapInternalSchemaToTemplate(validatedSchema);
 
     // Render React component to HTML
     const componentHTML = renderToStaticMarkup(
-      React.createElement(Template, { data: componentData })
+      React.createElement(Template, { data: validatedSchema })
     );
 
     // Create full HTML document
@@ -78,8 +79,8 @@ export default async function handler(
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="${componentData.projectName} - Modern luxury living">
-  <title>${componentData.projectName}${
+  <meta name="description" content="${templateData.projectName} - Modern luxury living">
+  <title>${templateData.projectName}${
     route !== '/'
       ? ' - ' +
         route
@@ -293,7 +294,7 @@ export default async function handler(
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '10mb', // Allow larger JSON payloads for campaign data with images
+      sizeLimit: '10mb', // Allow larger JSON payloads for schema data with images
     },
   },
 };

@@ -1,0 +1,168 @@
+{
+  "business": {
+    "name": "Springleaf Residence",
+    "website": "https://springleafresidence.com",
+    "email": "info@springleafresidence.com",
+    "phone": "+65 1234 5678",
+    "address": {
+      "street": "123 Orchard Road",
+      "city": "Singapore",
+      "state": "Central Region",
+      "postal": "238823",
+      "country": "Singapore"
+    }
+  },
+  "contact": {
+    "phone": "+65 1234 5678",
+    "email": "info@springleafresidence.com",
+    "website": "https://springleafresidence.com"
+  },
+  "hero": {
+    "headline": "Your Dream Home Awaits at Springleaf Residence",
+    "subheading": "Experience luxury living in the heart of Singapore with modern amenities and natural beauty",
+    "backgroundImage": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&h=1080&fit=crop&crop=center",
+    "ctaText": "Discover Your Future Home",
+    "ctaUrl": "#register"
+  },
+  "valuePropositions": [
+    {
+      "title": "Prime Location",
+      "description": "Located in the heart of Singapore with excellent connectivity to CBD and major amenities",
+      "icon": "📍"
+    },
+    {
+      "title": "Modern Amenities",
+      "description": "State-of-the-art facilities including gym, swimming pool, and landscaped gardens",
+      "icon": "🏊‍♂️"
+    },
+    {
+      "title": "Sustainable Living",
+      "description": "Eco-friendly design with energy-efficient systems and green building certification",
+      "icon": "🌿"
+    },
+    {
+      "title": "Family-Friendly",
+      "description": "Dedicated children's playground, family spaces, and proximity to top schools",
+      "icon": "👨‍👩‍👧‍👦"
+    }
+  ],
+  "cta": {
+    "title": "Register Your Interest Today",
+    "description": "Be the first to know about our latest developments and exclusive offers. Limited units available.",
+    "buttonText": "Register Now",
+    "buttonUrl": "#register",
+    "benefits": [
+      "Priority access to unit selection",
+      "Exclusive pricing for early birds",
+      "Personalized consultation with our team",
+      "Regular updates on construction progress"
+    ]
+  },
+  "gallery": [
+    {
+      "title": "Exterior View",
+      "imageUrl": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop&crop=center",
+      "description": "Modern architectural design with landscaped surroundings"
+    },
+    {
+      "title": "Living Room",
+      "imageUrl": "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop&crop=center",
+      "description": "Spacious and well-lit living areas with premium finishes"
+    },
+    {
+      "title": "Master Bedroom",
+      "imageUrl": "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=800&h=600&fit=crop&crop=center",
+      "description": "Comfortable bedrooms with built-in wardrobes and natural lighting"
+    },
+    {
+      "title": "Kitchen",
+      "imageUrl": "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=600&fit=crop&crop=center",
+      "description": "Modern kitchen with high-quality appliances and ample storage"
+    },
+    {
+      "title": "Swimming Pool",
+      "imageUrl": "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=800&h=600&fit=crop&crop=center",
+      "description": "Resort-style swimming pool with sun deck and relaxation areas"
+    },
+    {
+      "title": "Garden Area",
+      "imageUrl": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop&crop=center",
+      "description": "Beautifully landscaped gardens for relaxation and recreation"
+    }
+  ],
+  "location": {
+    "address": "123 Orchard Road, Singapore 238823",
+    "coordinates": {
+      "lat": 1.3048,
+      "lng": 103.8318
+    },
+    "nearbyAmenities": [
+      {
+        "name": "Orchard MRT Station",
+        "distance": "5 minutes walk",
+        "type": "transport"
+      },
+      {
+        "name": "ION Orchard",
+        "distance": "3 minutes walk",
+        "type": "shopping"
+      },
+      {
+        "name": "Singapore General Hospital",
+        "distance": "10 minutes drive",
+        "type": "healthcare"
+      },
+      {
+        "name": "Anglo-Chinese School",
+        "distance": "8 minutes drive",
+        "type": "education"
+      }
+    ],
+    "highlights": [
+      "Walking distance to premier shopping and dining",
+      "Excellent public transport connectivity",
+      "Close proximity to business district",
+      "Easy access to major highways"
+    ]
+  },
+  "legal": {
+    "disclaimer": "All information provided is subject to change without notice. Please verify all details before making any decisions.",
+    "terms": "Terms and conditions apply. Please refer to our website for full terms.",
+    "privacy": "Your privacy is important to us. Please see our privacy policy for details on how we handle your information."
+  },
+  "footer": {
+    "copyright": "© 2024 Springleaf Residence. All rights reserved.",
+    "socialLinks": [
+      {
+        "platform": "facebook",
+        "url": "https://facebook.com/springleafresidence"
+      },
+      {
+        "platform": "instagram",
+        "url": "https://instagram.com/springleafresidence"
+      },
+      {
+        "platform": "linkedin",
+        "url": "https://linkedin.com/company/springleafresidence"
+      }
+    ],
+    "quickLinks": [
+      {
+        "title": "About Us",
+        "url": "#about"
+      },
+      {
+        "title": "Gallery",
+        "url": "#gallery"
+      },
+      {
+        "title": "Location",
+        "url": "#location"
+      },
+      {
+        "title": "Contact",
+        "url": "#contact"
+      }
+    ]
+  }
+}

@@ -35,23 +35,42 @@ const Hero: React.FC<Props> = ({ hero }) => {
             {hero.subtitle}
           </p>
 
-          {/* CTA Buttons with enhanced styling */}
+          {/* CTA Buttons with specific styling */}
           <div className='flex flex-col sm:flex-row gap-6 justify-center mb-16'>
-            {hero.ctaButtons.map((button, index) => (
-              <a
-                key={index}
-                href={button.href}
-                className={`group px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl ${
+            {hero.ctaButtons.map((button, index) => {
+              // Specific styling based on button text/purpose
+              const isRegisterButton =
+                button.text.toLowerCase().includes('register') || button.href.includes('#register');
+              const isGalleryButton =
+                button.text.toLowerCase().includes('gallery') || button.href.includes('#gallery');
+
+              let buttonClasses =
+                'group px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl ';
+
+              if (isRegisterButton) {
+                // Green button with white text for Register Interest
+                buttonClasses +=
+                  'bg-green-600 text-white hover:bg-green-700 shadow-xl backdrop-blur-sm border border-green-500';
+              } else if (isGalleryButton) {
+                // Translucent button with white text for View Gallery
+                buttonClasses +=
+                  'bg-white/10 text-white border-2 border-white hover:bg-white hover:text-gray-900 backdrop-blur-sm';
+              } else {
+                // Default styling for other buttons
+                buttonClasses +=
                   button.variant === 'primary'
                     ? 'bg-primary-600 text-white hover:bg-primary-700 shadow-xl backdrop-blur-sm border border-primary-500'
-                    : 'bg-white/10 text-white border-2 border-white hover:bg-white hover:text-primary-900 backdrop-blur-sm'
-                }`}
-              >
-                <span className='group-hover:scale-105 transition-transform duration-200 inline-block'>
-                  {button.text}
-                </span>
-              </a>
-            ))}
+                    : 'bg-white/10 text-white border-2 border-white hover:bg-white hover:text-primary-900 backdrop-blur-sm';
+              }
+
+              return (
+                <a key={index} href={button.href} className={buttonClasses}>
+                  <span className='group-hover:scale-105 transition-transform duration-200 inline-block'>
+                    {button.text}
+                  </span>
+                </a>
+              );
+            })}
           </div>
 
           {/* Trust Indicators with enhanced design */}

@@ -1,5 +1,6 @@
 import React from 'react';
-import { CampaignData } from '../../schema/campaignSchema';
+import { InternalSchemaType } from '../../schema/internalSchema';
+import { mapInternalSchemaToTemplate, TemplateData } from './utils/schemaMapper';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import ValueProposition from './components/ValueProposition';
@@ -12,73 +13,98 @@ import Gallery from './components/Gallery';
 import FloorPlans from './components/FloorPlans';
 
 interface TemplateProps {
-  data: CampaignData;
+  data: InternalSchemaType;
 }
 
 const Template: React.FC<TemplateProps> = ({ data }) => {
+  // Map internal schema to template data format
+  const templateData: TemplateData = mapInternalSchemaToTemplate(data);
+
+  // Add smooth scrolling behavior
+  React.useEffect(() => {
+    // Smooth scroll polyfill for anchor links
+    const handleAnchorClick = (e: MouseEvent) => {
+      const target = e.target as HTMLAnchorElement;
+      if (target.tagName === 'A' && target.href.includes('#')) {
+        const targetId = target.href.split('#')[1];
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+          e.preventDefault();
+          targetElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          });
+        }
+      }
+    };
+
+    document.addEventListener('click', handleAnchorClick);
+    return () => document.removeEventListener('click', handleAnchorClick);
+  }, []);
+
   return (
-    <div className='min-h-screen bg-white'>
+    <div className='min-h-screen bg-white' style={{ scrollBehavior: 'smooth' }}>
       {/* Fixed Header */}
-      <Header header={data.header} />
+      <Header header={templateData.header} />
 
       <main className='relative'>
         {/* Hero Section - Home */}
         <section id='home' className='relative min-h-screen'>
-          {data.hero && <Hero hero={data.hero} />}
+          {templateData.hero && <Hero hero={templateData.hero} />}
         </section>
 
         {/* Value Proposition Section */}
-        {data.valueProposition && (
+        {templateData.valueProposition && (
           <section id='about' className='py-20 bg-gray-50'>
-            <ValueProposition valueProposition={data.valueProposition} />
+            <ValueProposition valueProposition={templateData.valueProposition} />
           </section>
         )}
 
         {/* Project Details Section */}
-        {data.projectDetail && (
+        {templateData.projectDetail && (
           <section id='project-detail' className='py-20 bg-white'>
-            <ProjectDetail projectDetail={data.projectDetail} />
+            <ProjectDetail projectDetail={templateData.projectDetail} />
           </section>
         )}
 
         {/* Gallery Section */}
-        {data.gallery && (
+        {templateData.gallery && (
           <section id='gallery' className='py-20 bg-gray-50'>
-            <Gallery gallery={data.gallery} />
+            <Gallery gallery={templateData.gallery} />
           </section>
         )}
 
         {/* Floor Plans Section */}
-        {data.floorPlans && (
+        {templateData.floorPlans && (
           <section id='floor-plans' className='py-20 bg-white'>
-            <FloorPlans floorPlans={data.floorPlans} />
+            <FloorPlans floorPlans={templateData.floorPlans} />
           </section>
         )}
 
         {/* Location Section */}
-        {data.location && (
+        {templateData.location && (
           <section id='location' className='py-20 bg-gray-50'>
-            <Location location={data.location} />
+            <Location location={templateData.location} />
           </section>
         )}
 
         {/* Call to Action Section */}
-        {data.cta && (
+        {templateData.cta && (
           <section id='cta' className='py-20 bg-primary-600'>
-            <CTA cta={data.cta} />
+            <CTA cta={templateData.cta} />
           </section>
         )}
 
         {/* Register Interest Section */}
-        {data.registerInterest && (
+        {templateData.registerInterest && (
           <section id='register-interest' className='py-20 bg-white'>
-            <RegisterInterest registerInterest={data.registerInterest} />
+            <RegisterInterest registerInterest={templateData.registerInterest} />
           </section>
         )}
       </main>
 
       {/* Footer */}
-      <Footer footer={data.footer} />
+      <Footer footer={templateData.footer} />
     </div>
   );
 };

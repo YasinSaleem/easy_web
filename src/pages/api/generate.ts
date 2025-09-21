@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { campaignSchema, type Campaign } from '../../schema/campaignSchema';
-import { jsonToProps } from '../../utils/jsonToProps';
+import { InternalSchema, InternalSchemaType } from '../../schema/internalSchema';
+import { mapInternalSchemaToTemplate } from '../../templates/springleaf/utils/schemaMapper';
 import Template from '../../templates/springleaf/Template';
 import React from 'react';
 
@@ -18,24 +18,25 @@ export default async function handler(
   }
 
   try {
-    const { campaignData, format = 'json' } = req.body;
+    const { internalSchemaData, format = 'json' } = req.body;
 
     // Validate required fields
-    if (!campaignData) {
+    if (!internalSchemaData) {
       return res.status(400).json({
         error: 'Missing required fields',
-        message: 'campaignData is required',
+        message:
+          'internalSchemaData is required. Use /api/transform to convert campaign data first.',
       });
     }
 
-    // Parse and validate campaign data using Zod schema
-    let validatedCampaign: Campaign;
+    // Parse and validate internal schema data using Zod
+    let validatedSchema: InternalSchemaType;
     try {
-      validatedCampaign = campaignSchema.parse(campaignData);
+      validatedSchema = InternalSchema.parse(internalSchemaData);
     } catch (error: any) {
       return res.status(400).json({
-        error: 'Invalid campaign data',
-        message: 'The provided campaign data does not match the required schema',
+        error: 'Invalid internal schema data',
+        message: 'The provided internal schema data does not match the required format',
         validationErrors:
           error.issues?.map((err: any) => ({
             path: err.path?.join('.') || 'unknown',
@@ -46,21 +47,19 @@ export default async function handler(
     }
 
     // Get business name for naming
-    const businessName =
-      validatedCampaign.campaign?.details?.business_details?.business_name ||
-      'springleaf-residence';
+    const businessName = validatedSchema.business.name || 'business-website';
     const sanitizedBusinessName = businessName.toLowerCase().replace(/[^a-z0-9-]/g, '-');
 
     // Generate single-page HTML application
     const generatedFiles: { [filename: string]: string } = {};
 
     try {
-      // Convert campaign data to component props (with static generation mode enabled for file paths)
-      const componentData = jsonToProps(validatedCampaign, '/');
+      // Convert internal schema to template props
+      const templateData = mapInternalSchemaToTemplate(validatedSchema);
 
       // Render React component to HTML
       const componentHTML = renderToStaticMarkup(
-        React.createElement(Template, { data: componentData })
+        React.createElement(Template, { data: validatedSchema })
       );
 
       // Create full HTML document with proper anchor navigation and hamburger menu
@@ -70,8 +69,8 @@ export default async function handler(
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="${componentData.projectName} - Modern luxury living">
-  <title>${componentData.projectName}</title>
+  <meta name="description" content="${templateData.projectName} - Modern luxury living">
+  <title>${templateData.projectName}</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -236,7 +235,7 @@ export default async function handler(
 <body style="font-family: Arial, sans-serif; margin: 2rem; color: #333;">
     <h1 style="color: #dc2626;">Error</h1>
     <p>There was an error generating the single-page website.</p>
-    <p>Please check your campaign data and try again.</p>
+    <p>Please check your internal schema data and try again.</p>
     <details style="margin-top: 1rem;">
       <summary style="cursor: pointer; font-weight: bold;">Error Details</summary>
       <pre style="background: #f3f4f6; padding: 1rem; border-radius: 4px; margin-top: 0.5rem; overflow-x: auto;">${error instanceof Error ? error.message : 'Unknown error'}</pre>
@@ -248,7 +247,7 @@ export default async function handler(
     // Add README file
     const readmeContent = `# ${businessName}
 
-This modern single-page responsive website was generated automatically from campaign data using React + Tailwind CSS.
+This modern single-page responsive website was generated automatically from internal schema data using React + Tailwind CSS.
 
 ## Files Included:
 - index.html - Complete single-page website with all sections
@@ -287,8 +286,8 @@ All sections are accessible through the navigation menu:
 - HTML5 semantic structure with anchor navigation
 
 Generated on: ${new Date().toLocaleDateString()}
-Campaign: ${validatedCampaign.campaign?.name || 'Real Estate Campaign'}
 Business: ${businessName}
+Template: ${validatedSchema.metadata?.template || 'Springleaf'}
 `;
 
     generatedFiles['README.md'] = readmeContent;
@@ -303,9 +302,10 @@ Business: ${businessName}
           timestamp: new Date().toISOString(),
           files: generatedFiles,
           metadata: {
-            campaignName: validatedCampaign.campaign?.name || 'Real Estate Campaign',
+            campaignName: validatedSchema.metadata?.campaignName || businessName,
             pagesGenerated: 1, // Single page now
             businessName,
+            template: validatedSchema.metadata?.template || 'springleaf',
           },
         },
       });
@@ -338,7 +338,7 @@ Business: ${businessName}
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '10mb', // Allow larger JSON payloads for campaign data with images
+      sizeLimit: '10mb', // Allow larger JSON payloads for schema data with images
     },
   },
 };
