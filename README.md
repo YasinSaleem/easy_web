@@ -153,6 +153,10 @@ Generate complete website bundle.
 
 ## 📊 Campaign Data Schema
 
+See **[INPUT_MAPPING.md](./INPUT_MAPPING.md)** for detailed documentation on how input JSON fields are dynamically mapped to the website template.
+
+### Quick Overview
+
 The application expects campaign data in the following format:
 
 ```json

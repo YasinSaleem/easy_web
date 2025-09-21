@@ -329,12 +329,22 @@
   overflow: hidden;
   background: white;
   position: relative;
+  /* Prevent any scroll behavior from affecting parent */
+  contain: strict;
+  isolation: isolate;
 }
 
 .poc-preview-iframe {
   width: 100%;
   height: 100%;
   border: none;
+  /* Prevent scroll behavior from affecting parent */
+  overflow: auto;
+  contain: layout style;
+  /* Ensure the iframe is isolated from parent scrolling */
+  will-change: auto;
+  /* Add containment to prevent any propagation */
+  contain: strict;
 }
 
 .poc-preview-placeholder {

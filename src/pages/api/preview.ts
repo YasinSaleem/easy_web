@@ -211,23 +211,53 @@ export default async function handler(
         });
       }
       
-      // Handle smooth scrolling for anchor links
+      // Handle smooth scrolling for anchor links with custom implementation
       const navLinks = document.querySelectorAll('a[href^="#"]');
       navLinks.forEach(function(link) {
         link.addEventListener('click', function(e) {
+          e.preventDefault(); // Prevent default navigation behavior
+          e.stopPropagation(); // Prevent event from bubbling up to parent
+          e.stopImmediatePropagation(); // Stop any other handlers
+          
           const href = link.getAttribute('href');
           if (href && href.startsWith('#')) {
             const targetId = href.substring(1);
             const targetElement = document.getElementById(targetId);
             
             if (targetElement) {
-              targetElement.scrollIntoView({ 
-                behavior: 'smooth',
-                block: 'start'
-              });
+              // Use a custom smooth scroll that's completely contained within this document
+              const startPosition = window.pageYOffset;
+              const targetPosition = targetElement.offsetTop - 80; // Account for fixed header
+              const distance = targetPosition - startPosition;
+              const duration = 800; // 800ms animation
+              let start = null;
+              
+              // Custom smooth scroll animation function
+              function smoothScrollStep(timestamp) {
+                if (!start) start = timestamp;
+                const progress = timestamp - start;
+                const progressPercentage = Math.min(progress / duration, 1);
+                
+                // Easing function (ease-out)
+                const easedProgress = 1 - Math.pow(1 - progressPercentage, 3);
+                
+                // Calculate current position
+                const currentPosition = startPosition + (distance * easedProgress);
+                
+                // Scroll to current position (only affects this window/iframe)
+                window.scrollTo(0, currentPosition);
+                
+                // Continue animation if not complete
+                if (progress < duration) {
+                  requestAnimationFrame(smoothScrollStep);
+                }
+              }
+              
+              // Start the animation
+              requestAnimationFrame(smoothScrollStep);
             }
           }
-        });
+        }, true); // Use capture phase to ensure we catch the event first
       });
     });
   </script>

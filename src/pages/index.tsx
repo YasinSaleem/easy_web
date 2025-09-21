@@ -83,6 +83,9 @@ const POCPage: NextPage = () => {
 
   // Listen for navigation messages from preview iframe
   useEffect(() => {
+    let scrollLocked = false;
+    let lockedScrollPosition = { x: 0, y: 0 };
+
     const handleMessage = (event: MessageEvent) => {
       // Verify origin for security (optional in development)
       if (event.data?.type === 'PREVIEW_NAVIGATE') {
@@ -92,10 +95,65 @@ const POCPage: NextPage = () => {
 
         // For single-page layout, we don't need to change routes
         // The navigation happens within the same page via anchor links
+      } else if (event.data?.type === 'PREVENT_PARENT_SCROLL') {
+        // Prevent the parent page from scrolling when iframe anchor links are clicked
+        event.preventDefault();
+        event.stopPropagation();
+
+        // Ensure parent page stays in place
+        const currentScrollY = window.scrollY;
+        const currentScrollX = window.scrollX;
+
+        // If the page scrolled, restore the position
+        setTimeout(() => {
+          if (window.scrollY !== currentScrollY || window.scrollX !== currentScrollX) {
+            window.scrollTo(currentScrollX, currentScrollY);
+          }
+        }, 0);
       }
     };
 
+    // Lock parent scroll when iframe is interacted with
+    const lockParentScroll = () => {
+      scrollLocked = true;
+      lockedScrollPosition = { x: window.scrollX, y: window.scrollY };
+    };
+
+    const unlockParentScroll = () => {
+      scrollLocked = false;
+    };
+
+    // Monitor scroll and restore position if locked
+    const handleScroll = () => {
+      if (scrollLocked) {
+        window.scrollTo(lockedScrollPosition.x, lockedScrollPosition.y);
+      }
+    };
+
+    // Add event listeners
     window.addEventListener('message', handleMessage);
+    window.addEventListener('scroll', handleScroll, { passive: false });
+
+    // Add iframe interaction detection
+    const iframe = document.querySelector('.poc-preview-iframe');
+    if (iframe) {
+      iframe.addEventListener('mouseenter', lockParentScroll);
+      iframe.addEventListener('mouseleave', unlockParentScroll);
+      iframe.addEventListener('focus', lockParentScroll);
+      iframe.addEventListener('blur', unlockParentScroll);
+    }
+
+    // Cleanup listener on unmount
+    return () => {
+      window.removeEventListener('message', handleMessage);
+      window.removeEventListener('scroll', handleScroll);
+      if (iframe) {
+        iframe.removeEventListener('mouseenter', lockParentScroll);
+        iframe.removeEventListener('mouseleave', unlockParentScroll);
+        iframe.removeEventListener('focus', lockParentScroll);
+        iframe.removeEventListener('blur', unlockParentScroll);
+      }
+    };
 
     // Cleanup listener on unmount
     return () => {
@@ -285,13 +343,35 @@ const POCPage: NextPage = () => {
                 </div>
 
                 {previewHtml ? (
-                  <div className='poc-preview-container'>
+                  <div
+                    className='poc-preview-container'
+                    onScroll={(e) => {
+                      // Prevent any scroll events from this container from affecting parent
+                      e.stopPropagation();
+                    }}
+                  >
                     <iframe
                       srcDoc={previewHtml}
                       className='poc-preview-iframe'
-                      sandbox='allow-scripts allow-same-origin'
+                      sandbox='allow-scripts'
                       title='Website Preview'
                       aria-label='Preview of single-page website'
+                      onLoad={(e) => {
+                        // Add additional isolation after iframe loads
+                        const iframe = e.target as HTMLIFrameElement;
+                        try {
+                          // Prevent any scroll events from the iframe from bubbling
+                          iframe.addEventListener(
+                            'scroll',
+                            (event) => {
+                              event.stopPropagation();
+                            },
+                            true
+                          );
+                        } catch (err) {
+                          // Cross-origin restrictions might prevent this
+                        }
+                      }}
                     />
                   </div>
                 ) : (
